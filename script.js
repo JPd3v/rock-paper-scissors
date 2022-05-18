@@ -1,7 +1,6 @@
 let playerScore = 0
 let computerScore = 0
 
-
 function computerPlay() {
     let randomNumber = Math.floor((Math.random()) * 3)
     if (randomNumber === 0) {
@@ -16,7 +15,11 @@ function computerPlay() {
 function playRound(e) {
     let playerSelection = `${e.currentTarget.className}`
     computerSelection = computerPlay()
-    if (playerSelection === computerSelection) {
+
+    loop:
+    if (playerScore === 5 || computerScore === 5) {
+        break loop
+    } else if (playerSelection === computerSelection) {
         checkWinner()
         return displayResult(`its a tie`)
     } else if (playerSelection === "rock" && computerSelection === "scissors") {
@@ -40,7 +43,7 @@ function playRound(e) {
         checkWinner()
         return displayResult(`you lose, ${computerSelection} beat ${playerSelection}`)
     }
-    
+
 }
 
 buttons = document.querySelectorAll("button")
@@ -48,16 +51,11 @@ buttons = document.querySelectorAll("button")
 buttons.forEach(button => button.addEventListener("click", playRound))
 
 function winnerCase() {
-    return ++playerScore 
+    return ++playerScore
 }
 
 function loserCase() {
     return ++computerScore
-}
-
-function ScoreReset() {
-    playerScore = 0
-    computerScore = 0
 }
 
 function displayResult(result) {
@@ -77,12 +75,41 @@ function displayScores(player, computer) {
     scoreboard.appendChild(computerScore)
 }
 
-function displayWinner(winner){
-    let body = document.querySelector("body")
+function displayWinner(winner) {
+    let title = document.querySelector(".winner-screen")
     let div = document.createElement("div")
-    div.textContent = `${winner} Wins!`
-    body.appendChild(div)
+    div.textContent = `${winner} wins!`
+    title.appendChild(div)
+    playAgainButton(title)
 }
+
+function playAgainButton(parent) {
+    let button = document.createElement("button")
+    button.textContent = "Play Again"
+    button.classList.add("play-again")
+    button.addEventListener("click", resetGame)
+    parent.appendChild(button)
+}
+
+function resetGame() {
+    scoreReset()
+    cleanDisplayer(document.querySelector(".displayer"))
+    cleanDisplayer(document.querySelector(".winner-screen"))
+}
+
+function scoreReset() {
+    playerScore = 0
+    computerScore = 0
+    document.querySelector(".player-score").textContent = 0
+        document.querySelector(".computer-score").textContent = 0
+}
+
+function cleanDisplayer(parent) {
+    while (parent.firstChild) {
+        parent.removeChild(parent.firstChild)
+    }
+}
+
 function checkWinner() {
     if (playerScore === 5) {
         return displayWinner("player")
