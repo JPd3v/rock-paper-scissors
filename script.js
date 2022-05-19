@@ -1,6 +1,6 @@
 let playerScore = 0
 let computerScore = 0
-buttons = document.querySelectorAll("button")
+let buttons = document.querySelectorAll("button")
 buttons.forEach(button => button.addEventListener("click", playRound))
 
 function computerPlay() {
